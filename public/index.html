@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hej</title>
+    <style>
+      [ng-cloak] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body ng-app="CRUD-example" ng-cloak>
+
+    <h1>Users:</h1>
+    <div ng-controller="UserController">
+      <div ng-repeat="user in users track by $index">
+        <input type="text" ng-model="user.email">
+        <button ng-click="updateUser(user)">save</button>
+        <button ng-click="removeUser(user)">Remove</button>
+      </div>
+    </div>
+
+    <hr>
+
+    <h1>Add user:</h1>
+    <form action="/users" method="post">
+      <input type="email" name="email" placeholder="email" value="foo@mailinator.com">
+      <input type="submit">
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
+    <script>
+    angular.module('CRUD-example', []).controller('UserController', [
+  '$http',
+  '$scope',
+  async function($http, $scope) {
+    $http.get('./users').then(res => ($scope.users = res.data))
+
+    $scope.removeUser = user => {
+      $http.delete(`/users/${user._id}`)
+      location.reload()
+    }
+
+    $scope.updateUser = user => {
+      const fd = new FormData()
+
+      $http({
+        method: 'PUT',
+        url: `/users/${user._id}`,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        data: 'email=' + encodeURIComponent(user.email)
+      })
+      location.reload()
+    }
+  }
+])
+</script>
+  </body>
+</html>
