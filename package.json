@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "author": "Jimmy Wärting",
   "scripts": {
-    "start": "gulp"
+    "start": "node lib/index.js"
   },
   "devDependencies": {
     "body-parser": "^1.14.2",
